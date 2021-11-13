@@ -1,2 +1,2 @@
 # geonames
-Go library for Geonames Web Services (geonames.org)
+Go client library for Geonames Web Services (geonames.org)
