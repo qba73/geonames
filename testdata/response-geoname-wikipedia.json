@@ -1,0 +1,125 @@
+{
+    "geonames": [
+        {
+            "summary": "Castlebar is the county town of County Mayo, Ireland. It is in the middle of the county and is its largest town by population. A campus of Galway-Mayo Institute of Technology and the Country Life section of the National Museum of Ireland are two important local amenities (...)",
+            "elevation": 41,
+            "geoNameId": 2965654,
+            "lng": -9.2988,
+            "countryCode": "IE",
+            "rank": 100,
+            "lang": "en",
+            "title": "Castlebar",
+            "lat": 53.8608,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Castlebar"
+        },
+        {
+            "summary": "County Mayo (meaning \"Plain of the yew trees\") is a county in Ireland. In the West of Ireland, it is part of the province of Connacht and is named after the village of Mayo, now generally known as Mayo Abbey. Mayo County Council is the local authority for the county (...)",
+            "elevation": 294,
+            "feature": "adm1st",
+            "lng": -9.36,
+            "countryCode": "IE",
+            "rank": 100,
+            "lang": "en",
+            "title": "County Mayo",
+            "lat": 53.92,
+            "wikipediaUrl": "en.wikipedia.org/wiki/County_Mayo"
+        },
+        {
+            "summary": "Westport (historically anglicised as Cahernamart) (see archival records) is a town in County Mayo in Ireland. It is at the south-east corner of Clew Bay, an inlet of the Atlantic Ocean on the west coast of Ireland (...)",
+            "elevation": 19,
+            "geoNameId": 2960970,
+            "feature": "city",
+            "lng": -9.5225,
+            "countryCode": "IE",
+            "rank": 98,
+            "thumbnailImg": "http://www.geonames.org/img/wikipedia/92000/thumb-91512-100.jpg",
+            "lang": "en",
+            "title": "Westport, County Mayo",
+            "lat": 53.799166666666665,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Westport%2C_County_Mayo"
+        },
+        {
+            "summary": "Clew Bay is a natural ocean bay in County Mayo, Republic of Ireland. It contains Ireland's best example of sunken drumlins. The bay is overlooked by Croagh Patrick to the south and the Nephin Range mountains of North Mayo. Clare Island guards the entrance of the bay (...)",
+            "geoNameId": 2965450,
+            "feature": "waterbody",
+            "lng": -9.8,
+            "rank": 93,
+            "thumbnailImg": "http://www.geonames.org/img/wikipedia/52000/thumb-51626-100.jpg",
+            "lang": "en",
+            "title": "Clew Bay",
+            "lat": 53.833333333333336,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Clew_Bay"
+        },
+        {
+            "summary": "The Battle of Castlebar occurred on 27 August 1798 near the town of Castlebar, County Mayo, during the Irish Rebellion of that year. A combined force of 2,000 French troops and Irish rebels routed a force of 6,000 British militia in what would later become known as the \"Castlebar Races\" or \"Races of (...)",
+            "elevation": 41,
+            "lng": -9.2989,
+            "countryCode": "IE",
+            "rank": 82,
+            "lang": "en",
+            "title": "Battle of Castlebar",
+            "lat": 53.8608,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Battle_of_Castlebar"
+        },
+        {
+            "summary": "Ealing is a major suburban district of west London, England and the administrative centre of the London Borough of Ealing. It is located west of Charing Cross and around from the City of London. It is one of the major metropolitan centres identified in the London Plan (...)",
+            "elevation": 35,
+            "geoNameId": 2650567,
+            "feature": "city",
+            "lng": -0.3058,
+            "countryCode": "GB",
+            "rank": 100,
+            "lang": "en",
+            "title": "Ealing",
+            "lat": 51.5111,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Ealing"
+        },
+        {
+            "summary": "Connacht or Connaught (or Cúige Chonnacht) is one of the Provinces of Ireland situated in the west of the country. Up to the 9th century it consisted of several independent major kingdoms (Lúighne, Uí Maine, Iarthar Connacht) (...)",
+            "elevation": 66,
+            "feature": "adm1st",
+            "lng": -9.05,
+            "countryCode": "IE",
+            "rank": 100,
+            "lang": "en",
+            "title": "Connacht",
+            "lat": 53.78,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Connacht"
+        },
+        {
+            "summary": "Ballina is a town in north County Mayo, Ireland. It lies at the mouth of the River Moy near Killala Bay, in the Moy valley and Parish of Kilmoremoy, with the Ox Mountains to the east and the Nephin Beg mountains to the west (...)",
+            "elevation": 32,
+            "geoNameId": 2966778,
+            "lng": -9.1667,
+            "countryCode": "IE",
+            "rank": 98,
+            "lang": "en",
+            "title": "Ballina, County Mayo",
+            "lat": 54.1167,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Ballina%2C_County_Mayo"
+        },
+        {
+            "summary": "Longford is the county town of County Longford in Ireland. It has a population of 9,601 according to the 2011 census. It is the biggest town in the county and about one third of the county's population lives there (...)",
+            "elevation": 53,
+            "geoNameId": 2962840,
+            "lng": -7.7998,
+            "countryCode": "IE",
+            "rank": 100,
+            "lang": "en",
+            "title": "Longford",
+            "lat": 53.727,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Longford"
+        },
+        {
+            "summary": "Castlebar railway station serves the town of Castlebar in County Mayo, Ireland. The station is on the Dublin to Westport Rail service. Passengers to or from Galway travel to Athlone and change trains. Passengers to or from Ballina and Foxford travel to Manulla Junction and change trains.  (...)",
+            "elevation": 42,
+            "feature": "railwaystation",
+            "lng": -9.288214,
+            "rank": 75,
+            "lang": "en",
+            "title": "Castlebar railway station",
+            "lat": 53.8473045,
+            "wikipediaUrl": "en.wikipedia.org/wiki/Castlebar_railway_station"
+        }
+    ]
+}

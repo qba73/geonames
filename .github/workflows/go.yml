@@ -18,5 +18,8 @@ jobs:
       with:
         go-version: 1.17
 
-    - name: Test
-      run: go test -v ./...
+    - name: Run unit tests
+      run: |
+        make test-ci
+      env:
+        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
