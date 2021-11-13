@@ -7,3 +7,56 @@
 
 # geonames
 Go client library for Geonames Web Services (geonames.org)
+
+
+## Usage
+
+- Register your username at [geonames.org](https://www.geonames.org/login)
+- Export ENV Var or read the username from your app config
+
+### Example
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/qba73/geonames"
+)
+
+func main() {
+    user := os.Getenv("GEO_USER")
+	geo := geonames.NewClient(user)
+
+	res, err := geo.Wikipedia.Get("Dublin", "IE", 1)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	city := struct {
+		Title       string
+		GeoNameID   int
+		Feature     string
+		Lat         float64
+		Lng         float64
+		CountryCode string
+		Language    string
+	}{
+		Title:       res.Geonames[0].Title,
+		GeoNameID:   res.Geonames[0].GeoNameID,
+		Feature:     res.Geonames[0].Feature,
+		Lat:         res.Geonames[0].Lat,
+		Lng:         res.Geonames[0].Lng,
+		CountryCode: res.Geonames[0].CountryCode,
+		Language:    res.Geonames[0].Lang,
+	}
+
+	fmt.Printf("%+v\n", city)
+
+	// Prints:
+	// {Title:Dublin GeoNameID:2964574 Feature:city Lat:53.343418 Lng:-6.267612 CountryCode:IE Language:en}
+}
+```
+
+
