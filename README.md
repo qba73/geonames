@@ -26,7 +26,7 @@ import (
 )
 
 func main() {
-    user := os.Getenv("GEO_USER")
+	user := os.Getenv("GEO_USER")
 	geo := geonames.NewClient(user)
 
 	res, err := geo.Wikipedia.Get("Dublin", "IE", 1)
