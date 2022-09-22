@@ -12,8 +12,7 @@ import (
 	"github.com/qba73/geonames"
 )
 
-// newTestServer is a helper func that creates
-// a test server with embedded URI validation.
+// newTestServer is a helper func that creates a test server with embedded URI validation.
 func newTestServer(testFile, wantURI string, t *testing.T) *httptest.Server {
 	ts := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		gotReqURI := r.RequestURI
@@ -31,8 +30,7 @@ func newTestServer(testFile, wantURI string, t *testing.T) *httptest.Server {
 	return ts
 }
 
-// verifyURIs is a test helper function that verifies
-// if provided URIs are the same.
+// verifyURIs is a test helper function that verifies if provided URIs are the same.
 func verifyURIs(wanturi, goturi string, t *testing.T) {
 	wantU, err := url.Parse(wanturi)
 	if err != nil {
@@ -62,7 +60,7 @@ func verifyURIs(wanturi, goturi string, t *testing.T) {
 	}
 }
 
-func TestResolveGeoName(t *testing.T) {
+func TestWikipediaResolvesGeoNameOnValidInput(t *testing.T) {
 	t.Parallel()
 
 	testFile := "testdata/response-geoname-wikipedia-single.json"

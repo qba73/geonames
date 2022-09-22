@@ -48,8 +48,8 @@ func NewClient(username string) *Client {
 	return &c
 }
 
-// MakeURL knows how to create encoded URL with provided query parameters.
-func MakeURL(base string, params url.Values) (string, error) {
+// makeURL knows how to create encoded URL with provided query parameters.
+func makeURL(base string, params url.Values) (string, error) {
 	b, err := url.Parse(base)
 	if err != nil {
 		return "", fmt.Errorf("parsing base url, %v", err)
@@ -58,9 +58,8 @@ func MakeURL(base string, params url.Values) (string, error) {
 	return b.String(), nil
 }
 
-// PrepareGETRequest takes URL string and prepares
-// HTTP Get request.
-func PrepareGETRequest(u string) (*http.Request, error) {
+// prepareGETRequest takes URL string and prepares HTTP Get request.
+func prepareGETRequest(u string) (*http.Request, error) {
 	req, err := http.NewRequest(http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
