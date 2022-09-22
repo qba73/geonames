@@ -8,31 +8,31 @@
 
 
 # geonames
-Go client library for Geonames Web Services (geonames.org)
+`geonames` is a Go library for [Geonames Web Services](http://www.geonames.org) (geonames.org). The GeoNames geographical database covers all countries and contains over eleven million placenames.
 
+## Setting your username
 
-## Usage
+To use this client library with your geonames account, you will need a unique username. Go to the [geonames login](https://www.geonames.org/login) and register.
 
-- Register your username at [geonames.org](https://www.geonames.org/login)
-- Export ENV Var or read the username from your app config
-
-### Example
+## Using the Go library
 
 ```go
-package main
-
-import (
-	"fmt"
-	"github.com/qba73/geonames"
-)
-
-func main() {
-	user := os.Getenv("GEO_USER")
-	geo := geonames.NewClient(user)
-
-	city, err := geo.Wikipedia.Get("Dublin", "IE", 1)
-	if err != nil {
-		// handle error
-	}
-}
+import github.com/qba73/geonames
 ```
+
+## Creating a client
+
+Export ENV Var or read the username from your app config
+
+```go
+user := os.Getenv("GEO_USER")
+geo := geonames.NewClient(user)
+```
+
+## Bugs and feature request
+
+If you find a bug in the ```geonames``` client library, please [open an issue](https://github.com/qba73/geonames/issues). If you'd like a feature added or improved, let me know via an issue.
+
+The project is under development, and not all the functionality of the GeoNames Web Services is implemented yet.
+
+Pull requests welcome!
