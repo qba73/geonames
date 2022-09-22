@@ -13,8 +13,7 @@ const (
 	baseURL        = "http://api.geonames.org"
 )
 
-// Client is a client used for communicating
-// with GeoNames web service.
+// Client is a client used for communicating with GeoNames web service.
 type Client struct {
 	// UserName is a user name chosen when registered for GeoNames.org
 	UserName string
