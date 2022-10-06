@@ -6,8 +6,6 @@ import (
 	"io"
 	"net/url"
 	"strconv"
-
-	"github.com/shopspring/decimal"
 )
 
 type wikipediaResponse struct {
@@ -31,11 +29,10 @@ type Geoname struct {
 	Elevation   int
 	GeoNameID   int
 	Feature     string
-	Lat         string
-	Long        string
+	Position    Position
 	CountryCode string
 	Rank        int
-	Lang        string
+	Language    string
 	Title       string
 	URL         string
 }
@@ -62,35 +59,37 @@ func (ws WikipediaService) Get(place, country string, maxResults int) ([]Geoname
 	}
 	defer res.Body.Close()
 
-	var wr wikipediaResponse
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, fmt.Errorf("reading response body %w", err)
 	}
+
+	var wr wikipediaResponse
 	if err := json.Unmarshal(data, &wr); err != nil {
 		return nil, fmt.Errorf("unmarshalling data, %w", err)
 	}
 
-	var gx []Geoname
+	var geonames []Geoname
 
 	for _, g := range wr.Geonames {
 		geoname := Geoname{
-			Summary:     g.Summary,
-			Elevation:   g.Elevation,
-			GeoNameID:   g.GeoNameID,
-			Feature:     g.Feature,
-			Lat:         decimal.NewFromFloatWithExponent(g.Lat, -4).String(),
-			Long:        decimal.NewFromFloatWithExponent(g.Lng, -4).String(),
+			Summary:   g.Summary,
+			Elevation: g.Elevation,
+			GeoNameID: g.GeoNameID,
+			Feature:   g.Feature,
+			Position: Position{
+				Lat:  g.Lat,
+				Long: g.Lng,
+			},
 			CountryCode: g.CountryCode,
 			Rank:        g.Rank,
-			Lang:        g.Lang,
+			Language:    g.Lang,
 			Title:       g.Title,
 			URL:         g.WikipediaURL,
 		}
-		gx = append(gx, geoname)
+		geonames = append(geonames, geoname)
 	}
-
-	return gx, nil
+	return geonames, nil
 }
 
 func (ws WikipediaService) makeWikiURL(place, country string, maxResults int) (string, error) {

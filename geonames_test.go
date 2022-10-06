@@ -74,3 +74,43 @@ func TestWikipediaResolvesGeoNameOnValidInput(t *testing.T) {
 
 	client.Wikipedia.Get(place, country, 1)
 }
+
+func TestLatLongWithPrecisionRoundsCoordinatesTo1km(t *testing.T) {
+	t.Parallel()
+
+	p := geonames.Position{
+		Lat:  53.8608,
+		Long: -9.2988,
+	}
+	wantLat := "53.86"
+	wantLong := "-9.30"
+
+	gotLat, gotLong, err := geonames.LatLongWithPrecision(p, geonames.Precision1km)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if wantLat != gotLat {
+		t.Errorf("want %s, got %s", wantLat, gotLat)
+	}
+	if wantLong != gotLong {
+		t.Errorf("want %s, got %s", wantLong, gotLong)
+	}
+}
+
+func TestLatLongWithPrecisionErrorsOnInvalidInput(t *testing.T) {
+	t.Parallel()
+
+	p := geonames.Position{
+		Lat:  53.8608,
+		Long: -9.2988,
+	}
+
+	invalidInputs := []int{-1, 9}
+	for _, i := range invalidInputs {
+		_, _, err := geonames.LatLongWithPrecision(p, i)
+		if err == nil {
+			t.Errorf("want err, got nil for input %d", i)
+		}
+	}
+}

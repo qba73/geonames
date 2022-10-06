@@ -26,22 +26,25 @@ func TestWikipediaClientRetrievesSingleGeoNameOnValidInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	want := []geonames.Geoname{
 		{
-			Summary:     "Castlebar is the county town of County Mayo, Ireland. It is in the middle of the county and is its largest town by population. A campus of Galway-Mayo Institute of Technology and the Country Life section of the National Museum of Ireland are two important local amenities (...)",
-			Elevation:   41,
-			GeoNameID:   2965654,
-			Lat:         "53.8608",
-			Long:        "-9.2988",
+			Summary:   "Castlebar is the county town of County Mayo, Ireland. It is in the middle of the county and is its largest town by population. A campus of Galway-Mayo Institute of Technology and the Country Life section of the National Museum of Ireland are two important local amenities (...)",
+			Elevation: 41,
+			GeoNameID: 2965654,
+			Position: geonames.Position{
+				Lat:  53.8608,
+				Long: -9.2988,
+			},
 			CountryCode: "IE",
 			Rank:        100,
-			Lang:        "en",
+			Language:    "en",
 			Title:       "Castlebar",
 			URL:         "en.wikipedia.org/wiki/Castlebar",
 		},
 	}
 
-	if !cmp.Equal(want, got, cmpopts.IgnoreFields(geonames.Geoname{}, "Summary")) {
+	if !cmp.Equal(want, got, cmpopts.IgnoreFields(geonames.Geoname{}, "Summary", "Position")) {
 		t.Errorf(cmp.Diff(want, got))
 	}
 }
