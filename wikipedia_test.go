@@ -15,7 +15,10 @@ func TestGetPlace_RetrievesSingleGeoNameOnValidInput(t *testing.T) {
 	ts := newTestServer(testFile, wantReqURI, t)
 	defer ts.Close()
 
-	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
+	client, err := geonames.NewClient(
+		geonames.WithUserName("DummyUser"),
+		geonames.WithBaseURL(ts.URL),
+	)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -69,7 +69,10 @@ func TestWikipediaResolvesGeoNameOnValidInput(t *testing.T) {
 	defer ts.Close()
 
 	name, country := "Castlebar", "IE"
-	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
+	client, err := geonames.NewClient(
+		geonames.WithUserName("DummyUser"),
+		geonames.WithBaseURL(ts.URL),
+	)
 	if err != nil {
 		t.Fatal(err)
 	}
