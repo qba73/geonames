@@ -41,7 +41,7 @@ func (c Client) GetPostCode(place, country string) ([]PostalCode, error) {
 		return nil, err
 	}
 
-	res, err := c.HTTPClient.Do(req)
+	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -78,8 +78,8 @@ func (c Client) makePostalURL(placeName, countryCode string) (string, error) {
 	prms := url.Values{
 		"placename": {placeName},
 		"country":   {countryCode},
-		"username":  {c.UserName},
+		"username":  {c.userName},
 	}
-	basePostal := fmt.Sprintf("%s/%s", c.BaseURL, "postalCodeSearchJSON")
+	basePostal := fmt.Sprintf("%s/%s", c.baseURL, "postalCodeSearchJSON")
 	return makeURL(basePostal, prms)
 }

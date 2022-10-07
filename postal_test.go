@@ -18,8 +18,10 @@ func TestGetPostalCodes_ReturnsSingleValueOnValidInput(t *testing.T) {
 	)
 	defer ts.Close()
 
-	client := geonames.NewClient("DummyUser")
-	client.BaseURL = ts.URL
+	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	place, country := "Castlebar", "IE"
 	got, err := client.GetPostCode(place, country)
@@ -59,8 +61,10 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 	)
 	defer ts.Close()
 
-	client := geonames.NewClient("DummyUser")
-	client.BaseURL = ts.URL
+	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	place, country := "Dublin", "IE"
 	got, err := client.GetPostCode(place, country)

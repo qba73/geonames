@@ -1,6 +1,7 @@
 package geonames
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -12,34 +13,72 @@ const (
 	userAgent      = "geonames/" + libraryVersion
 )
 
+type option func(*Client) error
+
+func WithHTTPClient(h *http.Client) option {
+	return func(c *Client) error {
+		if h == nil {
+			return errors.New("nil http Client")
+		}
+		c.httpClient = h
+		return nil
+	}
+}
+
+func WithBaseURL(url string) option {
+	return func(c *Client) error {
+		if url == "" {
+			return errors.New("nil baseURL")
+		}
+		c.baseURL = url
+		return nil
+	}
+}
+
+func WithHTTPHeaders(header http.Header) option {
+	return func(c *Client) error {
+		if header == nil {
+			return errors.New("nil HTTP headers")
+		}
+		c.headers = header
+		return nil
+	}
+}
+
 // Client is a client used for communicating with GeoNames web service.
 type Client struct {
 	// UserName is a user name chosen when registered for GeoNames.org
-	UserName   string
-	UserAgent  string
-	BaseURL    string
-	HTTPClient *http.Client
+	userName   string
+	userAgent  string
+	baseURL    string
+	httpClient *http.Client
 
 	// Optional HTTP headers to set for each API request.
-	Headers map[string][]string
+	headers map[string][]string
 }
 
 // NewClient knows how to create a client for GeoNames Web service.
 // The user name has to be registered at the GeoNames.org website.
 // HTTP requests without a valid username param will return 403 HTTP errors.
-func NewClient(username string) *Client {
+func NewClient(username string, options ...option) (*Client, error) {
 	c := Client{
-		UserName:  username,
-		UserAgent: userAgent,
-		BaseURL:   "http://api.geonames.org",
-		HTTPClient: &http.Client{
+		userName:  username,
+		userAgent: userAgent,
+		baseURL:   "http://api.geonames.org",
+		httpClient: &http.Client{
 			Timeout: time.Second * 5,
 		},
-		Headers: map[string][]string{
+		headers: map[string][]string{
 			"User-Agent":   {userAgent},
 			"Content-Type": {"application/json"}},
 	}
-	return &c
+
+	for _, opt := range options {
+		if err := opt(&c); err != nil {
+			return nil, fmt.Errorf("creating geonames client: %w", err)
+		}
+	}
+	return &c, nil
 }
 
 // makeURL knows how to create encoded URL with provided query parameters.
@@ -58,7 +97,7 @@ func (c Client) prepareGETRequest(u string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header = c.Headers
+	req.Header = c.headers
 	return req, nil
 }
 

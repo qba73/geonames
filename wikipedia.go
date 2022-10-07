@@ -48,7 +48,7 @@ func (c Client) GetPlace(name, country string, maxResults int) ([]Geoname, error
 		return nil, err
 	}
 
-	res, err := c.HTTPClient.Do(req)
+	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -96,8 +96,8 @@ func (c Client) makeWikiURL(place, country string, maxResults int) (string, erro
 		"title":       []string{place},
 		"countryCode": []string{country},
 		"maxRows":     []string{strconv.Itoa(maxResults)},
-		"username":    []string{c.UserName},
+		"username":    []string{c.userName},
 	}
-	base := fmt.Sprintf("%s/%s", c.BaseURL, "wikipediaSearchJSON")
+	base := fmt.Sprintf("%s/%s", c.baseURL, "wikipediaSearchJSON")
 	return makeURL(base, prms)
 }
