@@ -8,7 +8,7 @@ import (
 	"github.com/qba73/geonames"
 )
 
-func TestWikipediaClientRetrievesSingleGeoNameOnValidInput(t *testing.T) {
+func TestGetPlace_RetrievesSingleGeoNameOnValidInput(t *testing.T) {
 	t.Parallel()
 	testFile := "testdata/response-geoname-wikipedia-single.json"
 	wantReqURI := "/wikipediaSearchJSON?q=Castlebar&title=Castlebar&countryCode=IE&maxRows=1&username=DummyUser"
@@ -18,11 +18,11 @@ func TestWikipediaClientRetrievesSingleGeoNameOnValidInput(t *testing.T) {
 	client := geonames.NewClient("DummyUser")
 	client.BaseURL = ts.URL
 
-	place := "Castlebar"
+	name := "Castlebar"
 	country := "IE"
 	resultLimit := 1
 
-	got, err := client.Wikipedia.Get(place, country, resultLimit)
+	got, err := client.GetPlace(name, country, resultLimit)
 	if err != nil {
 		t.Fatal(err)
 	}

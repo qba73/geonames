@@ -37,23 +37,18 @@ type Geoname struct {
 	URL         string
 }
 
-type WikipediaService struct {
-	cl *Client
-}
-
-// Get knows how to retrive geo coordinates for
-// the given place name and country code.
-func (ws WikipediaService) Get(place, country string, maxResults int) ([]Geoname, error) {
-	u, err := ws.makeWikiURL(place, country, maxResults)
+// GetPlace retrives geo coordinates for given place name and country code.
+func (c Client) GetPlace(name, country string, maxResults int) ([]Geoname, error) {
+	u, err := c.makeWikiURL(name, country, maxResults)
 	if err != nil {
 		return nil, err
 	}
-	req, err := prepareGETRequest(u)
+	req, err := c.prepareGETRequest(u)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := ws.cl.HTTPClient.Do(req)
+	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +87,7 @@ func (ws WikipediaService) Get(place, country string, maxResults int) ([]Geoname
 	return geonames, nil
 }
 
-func (ws WikipediaService) makeWikiURL(place, country string, maxResults int) (string, error) {
+func (c Client) makeWikiURL(place, country string, maxResults int) (string, error) {
 	if maxResults < 1 {
 		return "", fmt.Errorf("incorrect results limit: %q", maxResults)
 	}
@@ -101,8 +96,8 @@ func (ws WikipediaService) makeWikiURL(place, country string, maxResults int) (s
 		"title":       []string{place},
 		"countryCode": []string{country},
 		"maxRows":     []string{strconv.Itoa(maxResults)},
-		"username":    []string{ws.cl.UserName},
+		"username":    []string{c.UserName},
 	}
-	base := fmt.Sprintf("%s/%s", ws.cl.BaseURL, "wikipediaSearchJSON")
+	base := fmt.Sprintf("%s/%s", c.BaseURL, "wikipediaSearchJSON")
 	return makeURL(base, prms)
 }

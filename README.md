@@ -26,7 +26,7 @@ Export ENV Var or read the username from your app config
 
 ```go
 user := os.Getenv("GEO_USER")
-geo := geonames.NewClient(user)
+client := geonames.NewClient(user)
 ```
 
 ## Bugs and feature request

@@ -4,10 +4,11 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/qba73/geonames"
 )
 
-func TestGetPostalCodesReturnsSingleValueOnValidInput(t *testing.T) {
+func TestGetPostalCodes_ReturnsSingleValueOnValidInput(t *testing.T) {
 	t.Parallel()
 
 	ts := newTestServer(
@@ -21,17 +22,19 @@ func TestGetPostalCodesReturnsSingleValueOnValidInput(t *testing.T) {
 	client.BaseURL = ts.URL
 
 	place, country := "Castlebar", "IE"
-	got, err := client.PostalCodes.Get(place, country)
+	got, err := client.GetPostCode(place, country)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	want := []geonames.PostalCode{
 		{
-			PlaceName:   "Castlebar",
-			AdminName1:  "Connacht",
-			Lat:         "53.85",
-			Long:        "-9.3",
+			PlaceName:  "Castlebar",
+			AdminName1: "Connacht",
+			Position: geonames.Position{
+				Lat:  53.85,
+				Long: -9.3,
+			},
 			CountryCode: "IE",
 			PostalCode:  "F23",
 			AdminCode1:  "C",
@@ -39,15 +42,15 @@ func TestGetPostalCodesReturnsSingleValueOnValidInput(t *testing.T) {
 	}
 
 	if len(got) != 1 {
-		t.Fatalf("want one postal code, got %#v", got)
+		t.Fatalf("want one postal code, got %v", got)
 	}
 
-	if !cmp.Equal(want, got) {
+	if !cmp.Equal(want, got, cmpopts.IgnoreFields(geonames.PostalCode{}, "Position")) {
 		t.Error(cmp.Diff(want, got))
 	}
 }
 
-func TestGetPostalCodesReturnsMultipleValuesOnValidInput(t *testing.T) {
+func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 	t.Parallel()
 	ts := newTestServer(
 		"testdata/response-geoname-postal-multiple.json",
@@ -60,213 +63,257 @@ func TestGetPostalCodesReturnsMultipleValuesOnValidInput(t *testing.T) {
 	client.BaseURL = ts.URL
 
 	place, country := "Dublin", "IE"
-	got, err := client.PostalCodes.Get(place, country)
+	got, err := client.GetPostCode(place, country)
 	if err != nil {
-		t.Fatalf("GetCodes(%q, %q) got err %v", place, country, err)
+		t.Fatal(err)
 	}
 
 	want := []geonames.PostalCode{
 		{
-			PlaceName:   "Dublin 1",
-			AdminName1:  "Leinster",
-			Lat:         "53.354",
-			Long:        "-6.2545",
+			PlaceName:  "Dublin 1",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D01",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 2",
-			AdminName1:  "Leinster",
-			Lat:         "53.34",
-			Long:        "-6.2543",
+			PlaceName:  "Dublin 2",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D02",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 3",
-			AdminName1:  "Leinster",
-			Lat:         "53.3645",
-			Long:        "-6.2378",
+			PlaceName:  "Dublin 3",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D03",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 4",
-			AdminName1:  "Leinster",
-			Lat:         "53.3334",
-			Long:        "-6.2335",
+			PlaceName:  "Dublin 4",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D04",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 5",
-			AdminName1:  "Leinster",
-			Lat:         "53.3842",
-			Long:        "-6.1921",
+			PlaceName:  "Dublin 5",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D05",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 6",
-			AdminName1:  "Leinster",
-			Lat:         "53.3088",
-			Long:        "-6.2631",
+			PlaceName:  "Dublin 6",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D06",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 7",
-			AdminName1:  "Leinster",
-			Lat:         "53.3615",
-			Long:        "-6.2918",
+			PlaceName:  "Dublin 7",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D07",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 8",
-			AdminName1:  "Leinster",
-			Lat:         "53.3346",
-			Long:        "-6.2733",
+			PlaceName:  "Dublin 8",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D08",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 9",
-			AdminName1:  "Leinster",
-			Lat:         "53.3818",
-			Long:        "-6.2465",
+			PlaceName:  "Dublin 9",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D09",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 10",
-			AdminName1:  "Leinster",
-			Lat:         "53.3409",
-			Long:        "-6.3545",
+			PlaceName:  "Dublin 10",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D10",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 11",
-			AdminName1:  "Leinster",
-			Lat:         "53.3899",
-			Long:        "-6.293",
+			PlaceName:  "Dublin 11",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D11",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 12",
-			AdminName1:  "Leinster",
-			Lat:         "53.322",
-			Long:        "-6.3165",
+			PlaceName:  "Dublin 12",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D12",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 13",
-			AdminName1:  "Leinster",
-			Lat:         "53.3946",
-			Long:        "-6.1495",
+			PlaceName:  "Dublin 13",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D13",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 14",
-			AdminName1:  "Leinster",
-			Lat:         "53.296",
-			Long:        "-6.2593",
+			PlaceName:  "Dublin 14",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D14",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 15",
-			AdminName1:  "Leinster",
-			Lat:         "53.3832",
-			Long:        "-6.4165",
+			PlaceName:  "Dublin 15",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D15",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 16",
-			AdminName1:  "Leinster",
-			Lat:         "53.3419",
-			Long:        "-6.279",
+			PlaceName:  "Dublin 16",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D16",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 17",
-			AdminName1:  "Leinster",
-			Lat:         "53.4006",
-			Long:        "-6.2058",
+			PlaceName:  "Dublin 17",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D17",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 18",
-			AdminName1:  "Leinster",
-			Lat:         "53.2469",
-			Long:        "-6.1774",
+			PlaceName:  "Dublin 18",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D18",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 20",
-			AdminName1:  "Leinster",
-			Lat:         "53.3518",
-			Long:        "-6.3693",
+			PlaceName:  "Dublin 20",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D20",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 22",
-			AdminName1:  "Leinster",
-			Lat:         "53.3275",
-			Long:        "-6.4006",
+			PlaceName:  "Dublin 22",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D22",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 24",
-			AdminName1:  "Leinster",
-			Lat:         "53.2851",
-			Long:        "-6.3713",
+			PlaceName:  "Dublin 24",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D24",
 			AdminCode1:  "L",
 		},
 		{
-			PlaceName:   "Dublin 6W",
-			AdminName1:  "Leinster",
-			Lat:         "53.3087",
-			Long:        "-6.3012",
+			PlaceName:  "Dublin 6W",
+			AdminName1: "Leinster",
+			Position: geonames.Position{
+				Lat:  53.354,
+				Long: -6.2545,
+			},
 			CountryCode: "IE",
 			PostalCode:  "D6W",
 			AdminCode1:  "L",
 		},
 	}
 
-	if !cmp.Equal(want, got) {
+	if !cmp.Equal(want, got, cmpopts.IgnoreFields(geonames.PostalCode{}, "Position")) {
 		t.Errorf(cmp.Diff(want, got))
 	}
 }

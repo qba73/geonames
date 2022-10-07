@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/url"
-
-	"github.com/shopspring/decimal"
 )
 
 type postalResponse struct {
@@ -25,30 +23,25 @@ type postalResponse struct {
 type PostalCode struct {
 	PlaceName   string
 	AdminName1  string
-	Lat         string
-	Long        string
+	Position    Position
 	CountryCode string
 	PostalCode  string
 	AdminCode1  string
 }
 
-type PostalCodesService struct {
-	cl *Client
-}
-
 // Get knows how to retrieve postal codes for the given place name and country code.
-func (ps PostalCodesService) Get(place, country string) ([]PostalCode, error) {
-	u, err := ps.makePostalURL(place, country)
+func (c Client) GetPostCode(place, country string) ([]PostalCode, error) {
+	u, err := c.makePostalURL(place, country)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := prepareGETRequest(u)
+	req, err := c.prepareGETRequest(u)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := ps.cl.HTTPClient.Do(req)
+	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -66,10 +59,12 @@ func (ps PostalCodesService) Get(place, country string) ([]PostalCode, error) {
 	var postalCodes []PostalCode
 	for _, pc := range pr.PostalCodes {
 		p := PostalCode{
-			PlaceName:   pc.PlaceName,
-			AdminName1:  pc.AdminName1,
-			Lat:         decimal.NewFromFloatWithExponent(pc.Lat, -4).String(),
-			Long:        decimal.NewFromFloatWithExponent(pc.Lng, -4).String(),
+			PlaceName:  pc.PlaceName,
+			AdminName1: pc.AdminName1,
+			Position: Position{
+				Lat:  pc.Lat,
+				Long: pc.Lng,
+			},
 			PostalCode:  pc.PostalCode,
 			CountryCode: pc.CountryCode,
 			AdminCode1:  pc.AdminCode1,
@@ -79,12 +74,12 @@ func (ps PostalCodesService) Get(place, country string) ([]PostalCode, error) {
 	return postalCodes, nil
 }
 
-func (ps PostalCodesService) makePostalURL(placeName, countryCode string) (string, error) {
+func (c Client) makePostalURL(placeName, countryCode string) (string, error) {
 	prms := url.Values{
 		"placename": {placeName},
 		"country":   {countryCode},
-		"username":  {ps.cl.UserName},
+		"username":  {c.UserName},
 	}
-	basePostal := fmt.Sprintf("%s/%s", ps.cl.BaseURL, "postalCodeSearchJSON")
+	basePostal := fmt.Sprintf("%s/%s", c.BaseURL, "postalCodeSearchJSON")
 	return makeURL(basePostal, prms)
 }
