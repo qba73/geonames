@@ -40,6 +40,12 @@ if err != nil {
 }
 ```
 
+## Complete example programs
+
+You can see complete example programs which retrive coordinates and postal codes in the [examples](examples/) folder.
+
+- postal codes lookup example: [examples/postal](examples/postal/main.go)
+- coordinates lookup example: [examples/wikipedia](examples/wikipedia/main.go)
 
 
 ## Bugs and feature request

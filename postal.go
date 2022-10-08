@@ -1,9 +1,7 @@
 package geonames
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/url"
 )
 
@@ -31,29 +29,13 @@ type PostalCode struct {
 
 // Get knows how to retrieve postal codes for the given place name and country code.
 func (c Client) GetPostCode(place, country string) ([]PostalCode, error) {
-	u, err := c.makePostalURL(place, country)
+	url, err := c.buildPostalURL(place, country)
 	if err != nil {
 		return nil, err
 	}
-
-	req, err := c.prepareGETRequest(u)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
 	var pr postalResponse
-	data, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, fmt.Errorf("reading response body %w", err)
-	}
-	if err := json.Unmarshal(data, &pr); err != nil {
-		return nil, fmt.Errorf("unmarshalling data, %w", err)
+	if err := c.get(url, &pr); err != nil {
+		return nil, err
 	}
 
 	var postalCodes []PostalCode
@@ -74,12 +56,18 @@ func (c Client) GetPostCode(place, country string) ([]PostalCode, error) {
 	return postalCodes, nil
 }
 
-func (c Client) makePostalURL(placeName, countryCode string) (string, error) {
-	prms := url.Values{
+func (c Client) buildPostalURL(placeName, countryCode string) (string, error) {
+	params := url.Values{
 		"placename": {placeName},
 		"country":   {countryCode},
 		"username":  {c.userName},
 	}
-	basePostal := fmt.Sprintf("%s/%s", c.baseURL, "postalCodeSearchJSON")
-	return makeURL(basePostal, prms)
+	basePostal := fmt.Sprintf("%s/postalCodeSearchJSON", c.baseURL)
+
+	u, err := url.Parse(basePostal)
+	if err != nil {
+		return "", fmt.Errorf("parsing base url for postal, %w", err)
+	}
+	u.RawQuery = params.Encode()
+	return u.String(), nil
 }

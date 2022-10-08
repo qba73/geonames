@@ -1,9 +1,7 @@
 package geonames
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/url"
 	"strconv"
 )
@@ -39,33 +37,20 @@ type Geoname struct {
 
 // GetPlace retrives geo coordinates for given place name and country code.
 func (c Client) GetPlace(name, country string, maxResults int) ([]Geoname, error) {
-	u, err := c.makeWikiURL(name, country, maxResults)
+	if maxResults < 1 {
+		return nil, fmt.Errorf("invalid max results: %d", maxResults)
+	}
+	url, err := c.buildWikiURL(name, country, maxResults)
 	if err != nil {
 		return nil, err
-	}
-	req, err := c.prepareGETRequest(u)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	data, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, fmt.Errorf("reading response body %w", err)
 	}
 
 	var wr wikipediaResponse
-	if err := json.Unmarshal(data, &wr); err != nil {
-		return nil, fmt.Errorf("unmarshalling data, %w", err)
+	if err := c.get(url, &wr); err != nil {
+		return nil, err
 	}
 
 	var geonames []Geoname
-
 	for _, g := range wr.Geonames {
 		geoname := Geoname{
 			Summary:   g.Summary,
@@ -87,17 +72,19 @@ func (c Client) GetPlace(name, country string, maxResults int) ([]Geoname, error
 	return geonames, nil
 }
 
-func (c Client) makeWikiURL(place, country string, maxResults int) (string, error) {
-	if maxResults < 1 {
-		return "", fmt.Errorf("incorrect results limit: %q", maxResults)
-	}
-	prms := url.Values{
+func (c Client) buildWikiURL(place, country string, maxResults int) (string, error) {
+	params := url.Values{
 		"q":           []string{place},
 		"title":       []string{place},
 		"countryCode": []string{country},
 		"maxRows":     []string{strconv.Itoa(maxResults)},
 		"username":    []string{c.userName},
 	}
-	base := fmt.Sprintf("%s/%s", c.baseURL, "wikipediaSearchJSON")
-	return makeURL(base, prms)
+	baseWiki := fmt.Sprintf("%s/wikipediaSearchJSON", c.baseURL)
+	u, err := url.Parse(baseWiki)
+	if err != nil {
+		return "", fmt.Errorf("parsing wikipedia base url: %w", err)
+	}
+	u.RawQuery = params.Encode()
+	return u.String(), nil
 }

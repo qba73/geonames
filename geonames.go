@@ -1,10 +1,12 @@
 package geonames
 
 import (
+	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"time"
 )
@@ -91,24 +93,33 @@ func NewClient(options ...option) (*Client, error) {
 	return &c, nil
 }
 
-// makeURL knows how to create encoded URL with provided query parameters.
-func makeURL(base string, params url.Values) (string, error) {
-	b, err := url.Parse(base)
-	if err != nil {
-		return "", fmt.Errorf("parsing base url, %w", err)
-	}
-	b.RawQuery = params.Encode()
-	return b.String(), nil
-}
+func (c Client) get(url string, data interface{}) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-// prepareGETRequest takes URL string and prepares HTTP Get request.
-func (c Client) prepareGETRequest(u string) (*http.Request, error) {
-	req, err := http.NewRequest(http.MethodGet, u, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("creating request: %w", err)
 	}
-	req.Header = c.headers
-	return req, nil
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("sending GET request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("got response code: %v", res.StatusCode)
+	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return fmt.Errorf("reading response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, data); err != nil {
+		return fmt.Errorf("unmarshaling response body: %w", err)
+	}
+	return nil
 }
 
 type Position struct {
