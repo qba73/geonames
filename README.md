@@ -24,17 +24,15 @@ import github.com/qba73/geonames
 
 Export ENV Var ```GEONAMES_USER```
 ```go
-client, err := geonames.NewClient()
+client, err := geonames.NewClient(os.Getenv("GEONAMES_USER"))
 if err != nil {
     // handle error
 }
 ```
 
-Provide username :
+Provide username directly:
 ```go
-client, err := geonames.NewClient(
-    geonames.WithUserName("dummy_user")
-)
+client, err := geonames.NewClient("dummy_user")
 if err != nil {
     // handle error
 }

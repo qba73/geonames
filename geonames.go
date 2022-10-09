@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -48,16 +47,6 @@ func WithHTTPHeaders(header http.Header) option {
 	}
 }
 
-func WithUserName(username string) option {
-	return func(c *Client) error {
-		if username == "" {
-			return errors.New("nil username")
-		}
-		c.userName = username
-		return nil
-	}
-}
-
 // Client is a client used for communicating with GeoNames web service.
 type Client struct {
 	userName   string
@@ -72,9 +61,12 @@ type Client struct {
 // NewClient knows how to create a client for GeoNames Web service.
 // The username has to be registered at the GeoNames.org website.
 // HTTP requests without a valid username will return 403 HTTP errors.
-func NewClient(options ...option) (*Client, error) {
+func NewClient(username string, options ...option) (*Client, error) {
+	if username == "" {
+		return nil, errors.New("nil geonames user")
+	}
 	c := Client{
-		userName:  os.Getenv("GEONAMES_USER"),
+		userName:  username,
 		userAgent: userAgent,
 		baseURL:   "http://api.geonames.org",
 		httpClient: &http.Client{
@@ -84,7 +76,6 @@ func NewClient(options ...option) (*Client, error) {
 			"User-Agent":   {userAgent},
 			"Content-Type": {"application/json"}},
 	}
-
 	for _, opt := range options {
 		if err := opt(&c); err != nil {
 			return nil, fmt.Errorf("creating geonames client: %w", err)
