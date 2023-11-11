@@ -6,9 +6,8 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/qba73/geonames.svg)](https://pkg.go.dev/github.com/qba73/geonames)
 
 
-
-
 # geonames
+
 `geonames` is a Go library for [Geonames Web Services](http://www.geonames.org) (geonames.org). The GeoNames geographical database covers all countries and contains over eleven million placenames.
 
 ## Setting your username
@@ -24,6 +23,7 @@ import github.com/qba73/geonames
 ## Creating a client
 
 Export ENV Var ```GEONAMES_USER```
+
 ```go
 client, err := geonames.NewClient(os.Getenv("GEONAMES_USER"))
 if err != nil {
@@ -32,6 +32,7 @@ if err != nil {
 ```
 
 Provide username directly:
+
 ```go
 client, err := geonames.NewClient("dummy_user")
 if err != nil {
@@ -45,7 +46,6 @@ You can see complete example programs which retrive coordinates and postal codes
 
 - postal codes lookup example: [examples/postal](examples/postal/main.go)
 - coordinates lookup example: [examples/wikipedia](examples/wikipedia/main.go)
-
 
 ## Bugs and feature request
 
