@@ -27,7 +27,7 @@ type PostalCode struct {
 	AdminCode1  string
 }
 
-// Get knows how to retrieve postal codes for the given place name and country code.
+// GetPostalCode retrieves postal codes for the given place name and the country code.
 func (c Client) GetPostCode(place, country string) ([]PostalCode, error) {
 	url, err := c.buildPostalURL(place, country)
 	if err != nil {

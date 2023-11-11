@@ -22,6 +22,7 @@ type wikipediaResponse struct {
 	} `json:"geonames"`
 }
 
+// Geoname represents a name for a place retrieved from Wikipedia.
 type Geoname struct {
 	Summary     string
 	Elevation   int

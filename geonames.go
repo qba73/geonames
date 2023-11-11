@@ -17,6 +17,7 @@ const (
 
 type option func(*Client) error
 
+// WithHTTPClient configures the Geonames HTTP Client.
 func WithHTTPClient(h *http.Client) option {
 	return func(c *Client) error {
 		if h == nil {
@@ -27,6 +28,7 @@ func WithHTTPClient(h *http.Client) option {
 	}
 }
 
+// WithBaseURL configures a base URL for the Geonames client.
 func WithBaseURL(url string) option {
 	return func(c *Client) error {
 		if url == "" {
@@ -37,6 +39,7 @@ func WithBaseURL(url string) option {
 	}
 }
 
+// WithHTTPHeader configures custom HTTP Headers used by the Geonames client.
 func WithHTTPHeaders(header http.Header) option {
 	return func(c *Client) error {
 		if header == nil {
@@ -47,7 +50,7 @@ func WithHTTPHeaders(header http.Header) option {
 	}
 }
 
-// Client is a client used for communicating with GeoNames web service.
+// Client holds data required for communicating with the Geonames Web Services.
 type Client struct {
 	userName   string
 	userAgent  string
@@ -58,7 +61,8 @@ type Client struct {
 	headers map[string][]string
 }
 
-// NewClient knows how to create a client for GeoNames Web service.
+// NewClient creates a new client for GeoNames Web service.
+//
 // The username has to be registered at the GeoNames.org website.
 // HTTP requests without a valid username will return 403 HTTP errors.
 func NewClient(username string, options ...option) (*Client, error) {
