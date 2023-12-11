@@ -23,7 +23,7 @@ func WithHTTPClient(h *http.Client) option {
 		if h == nil {
 			return errors.New("nil http Client")
 		}
-		c.httpClient = h
+		c.HTTPClient = h
 		return nil
 	}
 }
@@ -34,7 +34,7 @@ func WithBaseURL(url string) option {
 		if url == "" {
 			return errors.New("nil baseURL")
 		}
-		c.baseURL = url
+		c.BaseURL = url
 		return nil
 	}
 }
@@ -45,20 +45,33 @@ func WithHTTPHeaders(header http.Header) option {
 		if header == nil {
 			return errors.New("nil HTTP headers")
 		}
-		c.headers = header
+		c.Headers = header
 		return nil
 	}
 }
 
 // Client holds data required for communicating with the Geonames Web Services.
 type Client struct {
-	userName   string
-	userAgent  string
-	baseURL    string
-	httpClient *http.Client
+	UserName   string
+	UserAgent  string
+	BaseURL    string
+	HTTPClient *http.Client
 
 	// Optional HTTP headers to set for each API request.
-	headers map[string][]string
+	Headers map[string][]string
+}
+
+var DefaultClient = Client{
+	UserName:   "demo",
+	BaseURL:    "http://api.geonames.org",
+	HTTPClient: http.DefaultClient,
+	Headers:    map[string][]string{"Content-Type": {"application/json"}},
+}
+
+// NewDemoClient creates a demo client. Demo client
+// does not require username registration at geonames.org website.
+func NewDemoClient() *Client {
+	return &DefaultClient
 }
 
 // NewClient creates a new client for GeoNames Web service.
@@ -66,19 +79,17 @@ type Client struct {
 // The username has to be registered at the GeoNames.org website.
 // HTTP requests without a valid username will return 403 HTTP errors.
 func NewClient(username string, options ...option) (*Client, error) {
-	if username == "" {
-		return nil, errors.New("nil geonames user")
-	}
 	c := Client{
-		userName:  username,
-		userAgent: userAgent,
-		baseURL:   "http://api.geonames.org",
-		httpClient: &http.Client{
+		UserName:  username,
+		UserAgent: userAgent,
+		BaseURL:   "http://api.geonames.org",
+		HTTPClient: &http.Client{
 			Timeout: time.Second * 5,
 		},
-		headers: map[string][]string{
+		Headers: map[string][]string{
 			"User-Agent":   {userAgent},
-			"Content-Type": {"application/json"}},
+			"Content-Type": {"application/json"},
+		},
 	}
 	for _, opt := range options {
 		if err := opt(&c); err != nil {
@@ -88,15 +99,12 @@ func NewClient(username string, options ...option) (*Client, error) {
 	return &c, nil
 }
 
-func (c Client) get(url string, data interface{}) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
+func (c Client) get(ctx context.Context, url string, data any) error {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return fmt.Errorf("creating request: %w", err)
 	}
-	res, err := c.httpClient.Do(req)
+	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("sending GET request: %w", err)
 	}
@@ -117,7 +125,8 @@ func (c Client) get(url string, data interface{}) error {
 	return nil
 }
 
+// Position holds information about Lat and Long.
 type Position struct {
-	Lat  float64
-	Long float64
+	Lat float64
+	Lng float64
 }

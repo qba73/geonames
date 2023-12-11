@@ -1,6 +1,7 @@
 package geonames_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -24,7 +25,7 @@ func TestGetPostalCodes_ReturnsSingleValueOnValidInput(t *testing.T) {
 	}
 
 	place, country := "Castlebar", "IE"
-	got, err := client.GetPostCode(place, country)
+	got, err := client.GetPostCode(context.Background(), place, country)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -34,8 +35,8 @@ func TestGetPostalCodes_ReturnsSingleValueOnValidInput(t *testing.T) {
 			PlaceName:  "Castlebar",
 			AdminName1: "Connacht",
 			Position: geonames.Position{
-				Lat:  53.85,
-				Long: -9.3,
+				Lat: 53.85,
+				Lng: -9.3,
 			},
 			CountryCode: "IE",
 			PostalCode:  "F23",
@@ -54,6 +55,7 @@ func TestGetPostalCodes_ReturnsSingleValueOnValidInput(t *testing.T) {
 
 func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 	t.Parallel()
+
 	ts := newTestServer(
 		"testdata/response-geoname-postal-multiple.json",
 		"/postalCodeSearchJSON?country=IE&placename=Dublin&username=DummyUser",
@@ -67,7 +69,7 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 	}
 
 	place, country := "Dublin", "IE"
-	got, err := client.GetPostCode(place, country)
+	got, err := client.GetPostCode(context.Background(), place, country)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,8 +79,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 1",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D01",
@@ -88,8 +90,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 2",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D02",
@@ -99,8 +101,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 3",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D03",
@@ -110,8 +112,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 4",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D04",
@@ -121,8 +123,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 5",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D05",
@@ -132,8 +134,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 6",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D06",
@@ -143,8 +145,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 7",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D07",
@@ -154,8 +156,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 8",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D08",
@@ -165,8 +167,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 9",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D09",
@@ -176,8 +178,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 10",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D10",
@@ -187,8 +189,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 11",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D11",
@@ -198,8 +200,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 12",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D12",
@@ -209,8 +211,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 13",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D13",
@@ -220,8 +222,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 14",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D14",
@@ -231,8 +233,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 15",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D15",
@@ -242,8 +244,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 16",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D16",
@@ -253,8 +255,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 17",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D17",
@@ -264,8 +266,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 18",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D18",
@@ -275,8 +277,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 20",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D20",
@@ -286,8 +288,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 22",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D22",
@@ -297,8 +299,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 24",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D24",
@@ -308,8 +310,8 @@ func TestGetPostalCodes_ReturnsMultipleValuesOnValidInput(t *testing.T) {
 			PlaceName:  "Dublin 6W",
 			AdminName1: "Leinster",
 			Position: geonames.Position{
-				Lat:  53.354,
-				Long: -6.2545,
+				Lat: 53.354,
+				Lng: -6.2545,
 			},
 			CountryCode: "IE",
 			PostalCode:  "D6W",

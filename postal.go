@@ -1,6 +1,7 @@
 package geonames
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 )
@@ -28,13 +29,13 @@ type PostalCode struct {
 }
 
 // GetPostalCode retrieves postal codes for the given place name and the country code.
-func (c Client) GetPostCode(place, country string) ([]PostalCode, error) {
+func (c Client) GetPostCode(ctx context.Context, place, country string) ([]PostalCode, error) {
 	url, err := c.buildPostalURL(place, country)
 	if err != nil {
 		return nil, err
 	}
 	var pr postalResponse
-	if err := c.get(url, &pr); err != nil {
+	if err := c.get(ctx, url, &pr); err != nil {
 		return nil, err
 	}
 
@@ -44,8 +45,8 @@ func (c Client) GetPostCode(place, country string) ([]PostalCode, error) {
 			PlaceName:  pc.PlaceName,
 			AdminName1: pc.AdminName1,
 			Position: Position{
-				Lat:  pc.Lat,
-				Long: pc.Lng,
+				Lat: pc.Lat,
+				Lng: pc.Lng,
 			},
 			PostalCode:  pc.PostalCode,
 			CountryCode: pc.CountryCode,
@@ -60,9 +61,9 @@ func (c Client) buildPostalURL(placeName, countryCode string) (string, error) {
 	params := url.Values{
 		"placename": {placeName},
 		"country":   {countryCode},
-		"username":  {c.userName},
+		"username":  {c.UserName},
 	}
-	basePostal := fmt.Sprintf("%s/postalCodeSearchJSON", c.baseURL)
+	basePostal := fmt.Sprintf("%s/postalCodeSearchJSON", c.BaseURL)
 
 	u, err := url.Parse(basePostal)
 	if err != nil {

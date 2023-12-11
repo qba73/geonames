@@ -1,6 +1,7 @@
 package geonames_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -10,6 +11,7 @@ import (
 
 func TestGetPlace_RetrievesSingleGeoNameOnValidInput(t *testing.T) {
 	t.Parallel()
+
 	testFile := "testdata/response-geoname-wikipedia-single.json"
 	wantReqURI := "/wikipediaSearchJSON?q=Castlebar&title=Castlebar&countryCode=IE&maxRows=1&username=DummyUser"
 	ts := newTestServer(testFile, wantReqURI, t)
@@ -24,7 +26,7 @@ func TestGetPlace_RetrievesSingleGeoNameOnValidInput(t *testing.T) {
 	country := "IE"
 	resultLimit := 1
 
-	got, err := client.GetPlace(name, country, resultLimit)
+	got, err := client.GetPlace(context.Background(), name, country, resultLimit)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,8 +37,8 @@ func TestGetPlace_RetrievesSingleGeoNameOnValidInput(t *testing.T) {
 			Elevation: 41,
 			GeoNameID: 2965654,
 			Position: geonames.Position{
-				Lat:  53.8608,
-				Long: -9.2988,
+				Lat: 53.8608,
+				Lng: -9.2988,
 			},
 			CountryCode: "IE",
 			Rank:        100,

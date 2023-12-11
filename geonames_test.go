@@ -1,6 +1,7 @@
 package geonames_test
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -74,5 +75,5 @@ func TestWikipediaResolvesGeoNameOnValidInput(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	client.GetPlace(name, country, 1)
+	client.GetPlace(context.Background(), name, country, 1)
 }

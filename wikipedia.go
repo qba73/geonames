@@ -1,6 +1,7 @@
 package geonames
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -37,7 +38,7 @@ type Geoname struct {
 }
 
 // GetPlace retrives geo coordinates for given place name and country code.
-func (c Client) GetPlace(name, country string, maxResults int) ([]Geoname, error) {
+func (c Client) GetPlace(ctx context.Context, name, country string, maxResults int) ([]Geoname, error) {
 	if maxResults < 1 {
 		return nil, fmt.Errorf("invalid max results: %d", maxResults)
 	}
@@ -47,7 +48,7 @@ func (c Client) GetPlace(name, country string, maxResults int) ([]Geoname, error
 	}
 
 	var wr wikipediaResponse
-	if err := c.get(url, &wr); err != nil {
+	if err := c.get(ctx, url, &wr); err != nil {
 		return nil, err
 	}
 
@@ -59,8 +60,8 @@ func (c Client) GetPlace(name, country string, maxResults int) ([]Geoname, error
 			GeoNameID: g.GeoNameID,
 			Feature:   g.Feature,
 			Position: Position{
-				Lat:  g.Lat,
-				Long: g.Lng,
+				Lat: g.Lat,
+				Lng: g.Lng,
 			},
 			CountryCode: g.CountryCode,
 			Rank:        g.Rank,
@@ -79,9 +80,9 @@ func (c Client) buildWikiURL(place, country string, maxResults int) (string, err
 		"title":       []string{place},
 		"countryCode": []string{country},
 		"maxRows":     []string{strconv.Itoa(maxResults)},
-		"username":    []string{c.userName},
+		"username":    []string{c.UserName},
 	}
-	baseWiki := fmt.Sprintf("%s/wikipediaSearchJSON", c.baseURL)
+	baseWiki := fmt.Sprintf("%s/wikipediaSearchJSON", c.BaseURL)
 	u, err := url.Parse(baseWiki)
 	if err != nil {
 		return "", fmt.Errorf("parsing wikipedia base url: %w", err)
