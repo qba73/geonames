@@ -72,3 +72,8 @@ func (c Client) buildPostalURL(placeName, countryCode string) (string, error) {
 	u.RawQuery = params.Encode()
 	return u.String(), nil
 }
+
+// GetPostalCode takes place and country and returns postal codes.
+func GetPostCode(place, country string) ([]PostalCode, error) {
+	return ClientFromEnv.GetPostCode(context.Background(), place, country)
+}

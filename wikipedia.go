@@ -90,3 +90,9 @@ func (c Client) buildWikiURL(place, country string, maxResults int) (string, err
 	u.RawQuery = params.Encode()
 	return u.String(), nil
 }
+
+// GetPlace takes place name, country and max results and returns
+// a list of names associated with the place.
+func GetPlace(name, country string, maxResults int) ([]Geoname, error) {
+	return ClientFromEnv.GetPlace(context.Background(), name, country, maxResults)
+}

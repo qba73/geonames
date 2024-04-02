@@ -35,10 +35,8 @@ func TestGetElevationSRTM1ReturnsDataOnValidInput(t *testing.T) {
 	ts := newElevationTestServer(srtm1, wantReqURI, t)
 	defer ts.Close()
 
-	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
-	if err != nil {
-		t.Fatal(err)
-	}
+	client := geonames.NewClient("DummyUser")
+	client.BaseURL = ts.URL
 
 	want := geonames.Elevation{
 		Type:  "srtm1",
@@ -66,10 +64,8 @@ func TestGetElevationSRTM3ReturnsDataOnValidInput(t *testing.T) {
 	ts := newElevationTestServer(srtm3, wantReqURI, t)
 	defer ts.Close()
 
-	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
-	if err != nil {
-		t.Fatal(err)
-	}
+	client := geonames.NewClient("DummyUser")
+	client.BaseURL = ts.URL
 
 	want := geonames.Elevation{
 		Type:  "srtm3",
@@ -97,10 +93,8 @@ func TestGetElevationAstergdemReturnsDataOnValidInput(t *testing.T) {
 	ts := newElevationTestServer(astergdem, wantReqURI, t)
 	defer ts.Close()
 
-	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
-	if err != nil {
-		t.Fatal(err)
-	}
+	client := geonames.NewClient("DummyUser")
+	client.BaseURL = ts.URL
 
 	want := geonames.Elevation{
 		Type:  "astergdem",
@@ -128,10 +122,8 @@ func TestGetElevationGTOPO30ReturnsDataOnValidInput(t *testing.T) {
 	ts := newElevationTestServer(gtopo30, wantReqURI, t)
 	defer ts.Close()
 
-	client, err := geonames.NewClient("DummyUser", geonames.WithBaseURL(ts.URL))
-	if err != nil {
-		t.Fatal(err)
-	}
+	client := geonames.NewClient("DummyUser")
+	client.BaseURL = ts.URL
 
 	want := geonames.Elevation{
 		Type:  "gtopo30",

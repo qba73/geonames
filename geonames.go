@@ -3,52 +3,12 @@ package geonames
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 )
-
-const (
-	libraryVersion = "0.1"
-	userAgent      = "geonames/" + libraryVersion
-)
-
-type option func(*Client) error
-
-// WithHTTPClient configures the Geonames HTTP Client.
-func WithHTTPClient(h *http.Client) option {
-	return func(c *Client) error {
-		if h == nil {
-			return errors.New("nil http Client")
-		}
-		c.HTTPClient = h
-		return nil
-	}
-}
-
-// WithBaseURL configures a base URL for the Geonames client.
-func WithBaseURL(url string) option {
-	return func(c *Client) error {
-		if url == "" {
-			return errors.New("nil baseURL")
-		}
-		c.BaseURL = url
-		return nil
-	}
-}
-
-// WithHTTPHeader configures custom HTTP Headers used by the Geonames client.
-func WithHTTPHeaders(header http.Header) option {
-	return func(c *Client) error {
-		if header == nil {
-			return errors.New("nil HTTP headers")
-		}
-		c.Headers = header
-		return nil
-	}
-}
 
 // Client holds data required for communicating with the Geonames Web Services.
 type Client struct {
@@ -61,24 +21,16 @@ type Client struct {
 	Headers map[string][]string
 }
 
-var DefaultClient = Client{
-	UserName:   "demo",
-	BaseURL:    "http://api.geonames.org",
-	HTTPClient: http.DefaultClient,
-	Headers:    map[string][]string{"Content-Type": {"application/json"}},
-}
-
-// NewDemoClient creates a demo client. Demo client
-// does not require username registration at geonames.org website.
-func NewDemoClient() *Client {
-	return &DefaultClient
-}
+const (
+	libraryVersion = "0.1"
+	userAgent      = "geonames/" + libraryVersion
+)
 
 // NewClient creates a new client for GeoNames Web service.
 //
 // The username has to be registered at the GeoNames.org website.
 // HTTP requests without a valid username will return 403 HTTP errors.
-func NewClient(username string, options ...option) (*Client, error) {
+func NewClient(username string) *Client {
 	c := Client{
 		UserName:  username,
 		UserAgent: userAgent,
@@ -91,12 +43,7 @@ func NewClient(username string, options ...option) (*Client, error) {
 			"Content-Type": {"application/json"},
 		},
 	}
-	for _, opt := range options {
-		if err := opt(&c); err != nil {
-			return nil, fmt.Errorf("creating geonames client: %w", err)
-		}
-	}
-	return &c, nil
+	return &c
 }
 
 func (c Client) get(ctx context.Context, url string, data any) error {
@@ -129,4 +76,24 @@ func (c Client) get(ctx context.Context, url string, data any) error {
 type Position struct {
 	Lat float64
 	Lng float64
+}
+
+var DemoClient = &Client{
+	UserName:   "demo",
+	BaseURL:    "http://api.geonames.org",
+	HTTPClient: http.DefaultClient,
+	Headers: map[string][]string{
+		"Content-Type": {"application/json"},
+	},
+}
+
+var ClientFromEnv = &Client{
+	UserName: os.Getenv("GEONAMES_USER"),
+	BaseURL:  "http://api.geonames.org",
+	HTTPClient: &http.Client{
+		Timeout: 10 * time.Second,
+	},
+	Headers: map[string][]string{
+		"Content-Type": {"application/json"},
+	},
 }
