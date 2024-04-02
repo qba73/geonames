@@ -4,7 +4,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/qba73/geonames)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/qba73/geonames)
 [![Go Reference](https://pkg.go.dev/badge/github.com/qba73/geonames.svg)](https://pkg.go.dev/github.com/qba73/geonames)
-
+[![Known Vulnerabilities](https://snyk.io/test/github/qba73/geonames/badge.svg)](https://snyk.io/test/github/qba73/geonames)
 
 # geonames
 
