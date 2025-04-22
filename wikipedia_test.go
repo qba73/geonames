@@ -47,6 +47,6 @@ func TestGetPlace_RetrievesSingleGeoNameOnValidInput(t *testing.T) {
 	}
 
 	if !cmp.Equal(want, got, cmpopts.IgnoreFields(geonames.Geoname{}, "Summary", "Position")) {
-		t.Errorf(cmp.Diff(want, got))
+		t.Error(cmp.Diff(want, got))
 	}
 }
