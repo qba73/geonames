@@ -6,6 +6,8 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/qba73/geonames.svg)](https://pkg.go.dev/github.com/qba73/geonames)
 [![CodeQL](https://github.com/qba73/geonames/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/qba73/geonames/actions/workflows/github-code-scanning/codeql)
 [![Scorecard](https://github.com/qba73/geonames/actions/workflows/scorecard.yml/badge.svg)](https://github.com/qba73/geonames/actions/workflows/scorecard.yml)
+![Maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
+
 
 # geonames
 
